@@ -53,14 +53,34 @@ the gap the README names. The table is a guess at where they land.
 
 ## Reason code mapping
 
-| ext-disputes code | Likely Visa code | Likely Mastercard code (secondary sources) | What the merchant must show | Does grant plus receipt cover it |
+One table per tier 1 code. The Mastercard column comes from secondary
+sources, as noted above.
+
+### `scope-exceeded`
+
+| Case | Likely Visa code | Likely Mastercard code (secondary sources) | What the merchant must show | Does grant plus receipt cover it |
 |---|---|---|---|---|
-| `scope-exceeded` on `constraints.maxAmount` | 12.5 Incorrect Amount | 4834 | "Transaction Receipt ... or other record to prove that the Transaction amount was correct" (ID 0030301). The acquirer must also present the exact amount authorized "in accordance with a Cardholder's payment instructions" (ID 0008358) | The receipt covers the amount. The grant hurts the merchant: it shows the amount broke the cardholder's limit |
-| `scope-exceeded` on another constraint (recipient, any field in both grant and payment request) | 10.4 Other Fraud, Card-Absent | 4837 | That the cardholder authorized it | No. The grant shows the constraint was broken |
-| `grant-expired`, repeated purchase | 13.2 Cancelled Recurring | 4853 | That the authority was live when charged | No. A verified artifact already proves it was not |
-| `grant-expired`, one-off | 10.4 | 4837 | That the cardholder authorized it | No, same reason |
-| `audience-mismatch` | 10.4 | 4837 | That the cardholder authorized this merchant | No. The grant proves the opposite |
-| `unauthorized-agent` | 10.4 | 4837 | That the cardholder authorized the agent that placed it | Not alone. The cardholder's acknowledgement and agreement terms sit with the agent provider, which owes them to the issuer, not the merchant (ID 0031169) |
+| On `constraints.maxAmount` | 12.5 Incorrect Amount | 4834 | "Transaction Receipt ... or other record to prove that the Transaction amount was correct" (ID 0030301). The acquirer must also present the exact amount authorized "in accordance with a Cardholder's payment instructions" (ID 0008358) | The receipt covers the amount. The grant hurts the merchant: it shows the amount broke the cardholder's limit |
+| On another constraint (recipient, any field in both grant and payment request) | 10.4 Other Fraud, Card-Absent | 4837 | That the cardholder authorized it | No. The grant shows the constraint was broken |
+
+### `grant-expired`
+
+| Case | Likely Visa code | Likely Mastercard code (secondary sources) | What the merchant must show | Does grant plus receipt cover it |
+|---|---|---|---|---|
+| Repeated purchase | 13.2 Cancelled Recurring | 4853 | That the authority was live when charged | No. A verified artifact already proves it was not |
+| One-off | 10.4 | 4837 | That the cardholder authorized it | No, same reason |
+
+### `audience-mismatch`
+
+| Case | Likely Visa code | Likely Mastercard code (secondary sources) | What the merchant must show | Does grant plus receipt cover it |
+|---|---|---|---|---|
+| Any | 10.4 | 4837 | That the cardholder authorized this merchant | No. The grant proves the opposite |
+
+### `unauthorized-agent`
+
+| Case | Likely Visa code | Likely Mastercard code (secondary sources) | What the merchant must show | Does grant plus receipt cover it |
+|---|---|---|---|---|
+| Any | 10.4 | 4837 | That the cardholder authorized the agent that placed it | Not alone. The cardholder's acknowledgement and agreement terms sit with the agent provider, which owes them to the issuer, not the merchant (ID 0031169) |
 
 On a repeated purchase, a verified `grant-expired` artifact means the
 provider kept charging after the instruction expired, which ID 0031175
